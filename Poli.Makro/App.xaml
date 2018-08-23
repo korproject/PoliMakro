@@ -1,0 +1,113 @@
+﻿<Application x:Class="Poli.Makro.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException"
+             StartupUri="Main/Base.xaml"
+             xmlns:color="clr-namespace:Poli.Makro.Core.ViewModel.Color;assembly=Poli.Makro.Core"
+             xmlns:converters="clr-namespace:KOR.Converters;assembly=KOR.Converters">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!--<color:ColorLib x:Key="ColorLib"/>-->
+
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Colors -->
+                <ResourceDictionary Source="pack://application:,,,/KOR.Theme.ColorAndIcons;component/Colors.xaml"/>
+                <!-- Icons -->
+                <ResourceDictionary Source="pack://application:,,,/KOR.Theme.ColorAndIcons;component/Icons.xaml"/>
+
+
+                <!-- Borders -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Borders.xaml"/>
+
+                <!-- Buttons -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Buttons.xaml"/>
+
+                <!-- CheckBoxes -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/CheckBoxes.xaml"/>
+
+                <!-- ComboBox -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ComboBox.xaml"/>
+
+                <!-- ContextMenus -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ContextMenus.xaml"/>
+
+                <!-- ContextMenuTemplates -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ContextMenuTemplates.xaml"/>
+
+                <!-- Expanders -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Expanders.xaml"/>
+
+                <!-- General -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/General.xaml"/>
+
+                <!-- GroupBoxes -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/GroupBoxes.xaml"/>
+
+                <!-- ListViewItems -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ListViewItems.xaml"/>
+
+                <!-- ListViewItemTemplates -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ListViewItemTemplates.xaml"/>
+
+                <!-- ListViews -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ListViews.xaml"/>
+
+                <!-- PasswordBox -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/PasswordBox.xaml"/>
+
+                <!-- ProgressBars -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ProgressBars.xaml"/>
+
+                <!-- RichTextBoxes -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/RichTextBoxes.xaml"/>
+
+                <!-- ScrollBars -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ScrollBars.xaml"/>
+
+                <!-- ScrollViewers -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ScrollViewers.xaml"/>
+
+                <!-- TabControls -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TabControls.xaml"/>
+
+                <!-- TabItems -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TabItems.xaml"/>
+
+                <!-- TextBlock -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TextBlock.xaml"/>
+
+                <!-- TextBoxes -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TextBoxes.xaml"/>
+
+                <!-- Toggle Buttons -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ToggleButtons.xaml"/>
+
+                <!-- Tooltips -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Tooltips.xaml"/>
+
+                <!-- TreeViewItems -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TreeViewItems.xaml"/>
+
+                <!-- TreeViews -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TreeViews.xaml"/>
+
+                <!-- XctkColorCanvas -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/XctkColorCanvas.xaml"/>
+
+                <!-- Sliders -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Sliders.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Bool to visibility -->
+            <converters:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"/>
+            <!-- Null to visibility -->
+            <converters:Null2VisibilityConverter x:Key="Null2VisibilityConverter"/>
+            <!-- Set string limit  -->
+            <converters:StringLimitConverter x:Key="StringLimitConverter"/>
+            <!-- Bool to inverse bool -->
+            <converters:BoolInverseConverter x:Key="BoolInverseConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

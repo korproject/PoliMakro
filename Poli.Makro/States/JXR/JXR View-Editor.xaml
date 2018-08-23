@@ -1,0 +1,773 @@
+﻿<UserControl x:Class="Poli.Makro.States.JXR.JXR_Editor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Poli.Makro.Converters"
+             xmlns:xmll="clr-namespace:System.Xml;assembly=System.Xml"
+             xmlns:valueConverters="clr-namespace:Poli.Makro.Converters.JSON"
+             xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+             xmlns:templateSelectors="clr-namespace:Poli.Makro.TemplateSelectors"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:avalon="clr-namespace:Poli.Makro.Core.Helpers.Avalon;assembly=Poli.Makro.Core"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" Loaded="JXR_Editor_OnLoaded">
+
+    <UserControl.Resources>
+        <!--#region Converter -->
+
+        <converters:ClipboardInputActionConverter x:Key="ClipboardInputActionConverter" />
+        <converters:MultipleParameterConverter x:Key="MultipleParameterConverter" />
+        <converters:Bool2ToggleVisibilityConverter x:Key="Bool2ToggleVisibilityConverter" />
+        <converters:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter" />
+        <converters:StringMaxLenghtTreeDotsConverter x:Key="StringMaxLenghtTreeDotsConverter" />
+        <converters:Null2VisibilityConverter x:Key="Null2VisibilityConverter" />
+        <converters:TabControlNavigatorConverter x:Key="TabControlNavigatorConverter" />
+
+        <!--#endregion -->
+
+        <!--#region XML DataTemplate - Styles-->
+
+        <!--Blue300-->
+        <SolidColorBrush Color="#64B5F6" x:Key="xmlValueBrush"/>
+        <!--Red300-->
+        <SolidColorBrush Color="#E57373" x:Key="xmAttributeBrush"/>
+        <!--Blue600-->
+        <SolidColorBrush Color="#1E88E5" x:Key="xmlTagBrush"/>
+        <!--Blue300-->
+        <SolidColorBrush Color="#64B5F6" x:Key="xmlMarkBrush"/>
+        <!--Blue50-->
+        <SolidColorBrush Color="#E3F2FD" x:Key="xmlValue"/>
+
+        <DataTemplate x:Key="attributeTemplate">
+            <StackPanel Orientation="Horizontal" Margin="3,0,0,0" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Path=Name}" Foreground="{StaticResource xmAttributeBrush}"/>
+                <TextBlock Text="=&quot;" Foreground="{StaticResource xmlMarkBrush}"/>
+                <TextBlock Text="{Binding Path=Value}" Foreground="{StaticResource xmlValueBrush}"/>
+                <TextBlock Text="&quot;" Foreground="{StaticResource xmlMarkBrush}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="IsExpanded" Value="True"/>
+        </Style>
+
+        <HierarchicalDataTemplate x:Key="treeViewTemplate" ItemsSource="{Binding XPath=child::node()}">
+            <StackPanel Orientation="Horizontal" Margin="3,0,0,0" HorizontalAlignment="Center">
+                <TextBlock Text="&lt;" HorizontalAlignment="Center" 
+                           Foreground="{StaticResource xmlMarkBrush}" 
+                           x:Name="startTag"/>
+
+                <TextBlock Text="{Binding Path=Name}"
+                    Margin="0"
+                    HorizontalAlignment="Center"
+                    x:Name="xmlTag"
+                    Foreground="{StaticResource xmlTagBrush}"/>
+
+                <ItemsControl
+                    ItemTemplate="{StaticResource attributeTemplate}"
+                    ItemsSource="{Binding Path=Attributes}"
+                    HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <TextBlock Text="&gt;" HorizontalAlignment="Center" 
+                           Foreground="{StaticResource xmlMarkBrush}" 
+                           x:Name="endTag"/>
+            </StackPanel>
+
+            <HierarchicalDataTemplate.Triggers>
+                <DataTrigger Binding="{Binding NodeType}">
+                    <DataTrigger.Value>
+                        <xmll:XmlNodeType>Text</xmll:XmlNodeType>
+                    </DataTrigger.Value>
+                    <Setter Property="Text" Value="{Binding InnerText}" 
+                            TargetName="xmlTag"/>
+                    <Setter Property="Foreground" Value="{StaticResource xmlValue}" 
+                            TargetName="xmlTag"/>
+                    <Setter Property="Visibility" Value="Collapsed" 
+                            TargetName="startTag"/>
+                    <Setter Property="Visibility" Value="Collapsed" 
+                            TargetName="endTag"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Path=HasChildNodes}" Value="False">
+                    <Setter Property="Text" Value="/&gt;" TargetName="endTag"/>
+                </DataTrigger>
+            </HierarchicalDataTemplate.Triggers>
+        </HierarchicalDataTemplate>
+
+        <!--#endregion -->
+
+        <!--#region Json TreeView DataTemplate -->
+
+        <!--#regionJson TreeView Template Conveters-->
+        <valueConverters:MethodToValueConverter x:Key="MethodToValueConverter"/>
+        <valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
+        <valueConverters:JValueConverter x:Key="JValueConverter"/>
+        <valueConverters:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
+        <valueConverters:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
+        <valueConverters:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
+        <!--#endregion-->
+
+        <!--Top-->
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <!--Array expression-->
+                <TextBlock Text="array" Foreground="#e89f51" Padding="3, 0, 3, 1" Margin="0,0,5,0"/>
+                <!--Array lenght-->
+                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#e89f51"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        
+        <!--Parent item-->
+        <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="#48b1f2"/>
+                <TextBlock Text=" : " Foreground="#48b1f2"/>
+                <TextBlock Text="array" Foreground="#e89f51" Padding="3, 0, 3, 1" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#e89f51"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        
+        <!--Top brackets-->
+        <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="#48b1f2"/>
+                <TextBlock Text=" : " Foreground="#48b1f2"/>
+                <TextBlock Text="{}{ }" Foreground="#e89f51"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <!--Sub item-->
+        <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="#48b1f2"/>
+                <TextBlock Text=" : " Foreground="#48b1f2"/>
+                <TextBlock Text="  "/>
+
+                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="300" 
+                           TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
+                           Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <!--Brackets-->
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text=" "/>
+                <TextBlock Text="{}{ }" Foreground="#e89f51"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <!--JConstructor-->
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <TextBlock Text="Constructor">
+            </TextBlock>
+        </HierarchicalDataTemplate>
+
+        <!--JRaw-->
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <TextBlock Text="Raw">
+            </TextBlock>
+        </HierarchicalDataTemplate>
+
+        <!--TreeView Item Template Selector-->
+        <templateSelectors:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
+                        ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
+                        ObjectPropertyTemplate="{StaticResource ObjectPropertyTemplate}"
+                        PrimitivePropertyTemplate ="{StaticResource PrimitivePropertyTemplate}"/>
+
+        <!--Value double click-->
+        <DataTemplate DataType="{x:Type jlinq:JValue}">
+            <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="300" 
+                    TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
+                    Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
+        </DataTemplate>
+
+        <!--#endregion -->
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource ThemeColor1}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <!--Content-->
+        <TabControl x:Name="TabControl" Grid.Column="1" TabStripPlacement="Left" Style="{StaticResource PoliMakroTabControlDotDotBar}" SelectedIndex="0" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="JSON Editör" Style="{StaticResource PoliMakroTabItemDotDotBar}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Json Editor - Viewer Content-->
+                    <Grid x:Name="JsonEditorGrid" Drop="JsonEditorGrid_OnDrop" AllowDrop="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Grid.ColumnSpan="3">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!--Open File-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="Dosyadan Oku" 
+                                        Command="{Binding JsonLoadFromFile}">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 1 0 0" 
+                                              Data="{Binding Source={StaticResource Open}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Get From Clipboard-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="Panodan Oku" 
+                                        Command="{Binding JsonLoadFromClipboard}">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="0 0 0 0" 
+                                              Data="{Binding Source={StaticResource Paste}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Get From Web-->
+                                <ToggleButton Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomToggleButton}" 
+                                        ToolTip="WEB'den Oku" 
+                                        Command="{Binding JsonLoadFromWeb}"
+                                        Checked="GetFromWebChecked" Unchecked="GetJsonFromWebClose">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="1 0 0 0" 
+                                              Data="{Binding Source={StaticResource Web}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </ToggleButton>
+
+                                <Border Width="1" Margin="10" Background="{StaticResource BlueGrey400}" VerticalAlignment="Stretch"/>
+
+                                <!--Build JSON Tree-->
+                                <Button Height="30" Width="30" Margin="5"
+                                              Style="{StaticResource CustomButtonStyle}" 
+                                              ToolTip="JSON Ağacı Oluştur" 
+                                              Command="{Binding BindJsonTree}">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 0 0 2" 
+                                              Data="{Binding Source={StaticResource Hierarchy}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--ReFormat JSON String-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="JSON Verisini Yeniden Formatla" 
+                                        Command="{Binding ReFormatJsonString}">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="0 0 0 0" 
+                                              Data="{Binding Source={StaticResource Tick}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <Border Width="1" Margin="10" Background="{StaticResource BlueGrey400}" VerticalAlignment="Stretch"/>
+
+                                <!--Expand - Collapse-->
+                                <Button Height="30" Width="30" Margin="5"
+                                              Style="{StaticResource CustomButtonStyle}" 
+                                              ToolTip="JSON Ağacını Katma - Aç" 
+                                              Click="JsonTreeExpandCollapse">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 0 0 0" 
+                                              Data="{Binding Source={StaticResource ExpandCollapse}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Clear-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="İçerikleri Temizle" 
+                                        Command="{Binding ClearJsonData}">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="0 1 0 0" 
+                                              Data="{Binding Source={StaticResource Cleaning}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Clear-->
+                                <Button Height="30" Width="30" Margin="5" Visibility="Collapsed"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="XML'e Dönüştür" Click="JsontoXmlConvert">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="1 0 0 0" 
+                                              Data="{Binding Source={StaticResource ConvertAnotherType}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!--#region Tree Viewer-->
+
+                        <TreeView Name="JsonTree"
+                                Grid.Row="1" Grid.Column="0" Margin="5" 
+                                Tag="JSON Ağacında İçerik Yok" 
+                                ItemsSource="{Binding Path=JsonTreeView, NotifyOnSourceUpdated=True, Mode=OneWay}"
+                                Style="{DynamicResource CustomTreeView}"
+                                ItemContainerStyle="{StaticResource CustomTreeViewStyle}"
+                                IsTextSearchEnabled="True" ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}"/>
+
+                        <!--#endregion-->
+
+                        <GridSplitter Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Width="5" Margin="0 5 0 5" HorizontalAlignment="Stretch" Opacity=".1"/>
+
+                        <!--#region Editor-->
+
+                        <ComboBox Name="HighlightingComboBox"
+                                  Visibility="Collapsed" IsEnabled="False"
+                                  Width="50" Height="30"
+                                  Grid.Column="2" Grid.Row="1" 
+                                  SelectedItem="{Binding SyntaxHighlighting, ElementName=AvalonJsonEditor}"
+                                  ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"/>
+
+                        <avalonEdit:TextEditor x:Name="AvalonJsonEditor"
+                                               Grid.Column="2" Grid.Row="1" 
+                                               Background="{StaticResource ThemeColor1}" 
+                                               Foreground="{StaticResource BlueGrey200}" 
+                                               ShowLineNumbers="True" 
+                                               FontFamily="Consolas" 
+                                               FontSize="10pt">
+                            <i:Interaction.Behaviors>
+                                <avalon:AvalonEditBehaviour GiveMeTheText="{Binding JsonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </i:Interaction.Behaviors>
+                        </avalonEdit:TextEditor>
+
+                        <!--#endregion-->
+                    </Grid>
+
+                    <Grid x:Name="GetFromWebGrid" Visibility="Hidden">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="GetJsonFromWebClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border x:Name="SaveRecords" Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="JSON İçeriğini Webden Getir" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35">
+                                    <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                        <Grid Margin="0 0 10 0">
+                                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBox x:Name="GetJsonURL"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Bir URL adresi girin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="20 10 10 10" Click="JsonGetFromWeb">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Getir" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="GetJsonFromWebClose">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="İptal" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--Seperator-->
+                    <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Column="2"
+                            Width="1" CornerRadius="1" Height="Auto" Margin="0 10 0 10"
+                            HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+                    <!--Side Actions-->
+                    <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center" Margin="15 0 5 0">
+                        <!--Save As-->
+                        <ToggleButton Style="{StaticResource CustomToggleButton}" 
+                                      Width="25" Height="25" Margin="0 15 0 15" 
+                                      ToolTip="Farklı Kaydet"
+                                      Visibility="{Binding ElementName=AvalonJsonEditor, Path=Text, Converter={StaticResource Bool2ToggleVisibilityConverter}, FallbackValue=Visible}"
+                                      Command="{Binding SaveAsJsonString}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Width="22" Stretch="Uniform" Data="{Binding Source={StaticResource SaveAs}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!--Copy-->
+                        <ToggleButton Style="{StaticResource CustomToggleButton}" 
+                                      Width="25" Height="25" Margin="0 15 0 15" 
+                                      ToolTip="Panoya Kopyala"
+                                      Visibility="{Binding ElementName=AvalonJsonEditor, Path=Text, Converter={StaticResource Bool2ToggleVisibilityConverter}, FallbackValue=Visible}"
+                                      Command="{Binding CopyToClipboardJsonString}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Width="22" Stretch="Uniform" Data="{Binding Source={StaticResource Copy}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="XML - RSS Editör" Style="{StaticResource PoliMakroTabItemDotDotBar}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Json Editor - Viewer Content-->
+                    <Grid x:Name="XmlEditorGrid" Drop="XmlEditorGrid_OnDrop" AllowDrop="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Grid.ColumnSpan="3">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!--Open File-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="Dosyadan Oku" Click="XmlLoadFromFile">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 1 0 0" 
+                                              Data="{Binding Source={StaticResource Open}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Get From Clipboard-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="Panodan Oku" Click="LoadXmlFromClipboard">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="0 0 0 0" 
+                                              Data="{Binding Source={StaticResource Paste}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Get From Web-->
+                                <ToggleButton Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomToggleButton}" 
+                                        ToolTip="WEB'den Oku" 
+                                        Command="{Binding JsonLoadFromWeb}"
+                                        Checked="GetFromWebXmlChecked" Unchecked="GetXmlFromWebClose">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="15" Stretch="Uniform" Margin="1 0 0 0" 
+                                              Data="{Binding Source={StaticResource Web}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </ToggleButton>
+
+                                <Border Width="1" Margin="10" Background="{StaticResource BlueGrey400}" VerticalAlignment="Stretch"/>
+
+                                <!--Build JSON Tree-->
+                                <Button Height="30" Width="30" Margin="5"
+                                              Style="{StaticResource CustomButtonStyle}" 
+                                              ToolTip="XML Ağacı Oluştur" Click="BindXmlTree">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 0 0 2" 
+                                              Data="{Binding Source={StaticResource Hierarchy}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--ReFormat JSON String-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="XML Verisini Yeniden Formatla" 
+                                        Click="ReFormatXmlString">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="0 0 0 0" 
+                                              Data="{Binding Source={StaticResource Tick}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <Border Width="1" Margin="10" Background="{StaticResource BlueGrey400}" VerticalAlignment="Stretch"/>
+
+                                <!--Expand - Collapse-->
+                                <Button Height="30" Width="30" Margin="5"
+                                              Style="{StaticResource CustomButtonStyle}" 
+                                              ToolTip="XML Ağacını Katla - Aç" Click="XmlTreeExpandCollapse">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="1 0 0 0" 
+                                              Data="{Binding Source={StaticResource ExpandCollapse}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+
+                                <!--Clear-->
+                                <Button Height="30" Width="30" Margin="5"
+                                        Style="{StaticResource CustomButtonStyle}" 
+                                        ToolTip="İçerikleri Temzile" Click="ClearXmlData">
+                                    <Grid>
+                                        <Path Height="40" Stretch="Uniform" 
+                                              Data="{Binding Source={StaticResource CircleThin}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey200}"/>
+                                        <Path Height="13" Stretch="Uniform" Margin="0 1 0 0" 
+                                              Data="{Binding Source={StaticResource Cleaning}, Path=Data}" 
+                                              Fill="{StaticResource BlueGrey100}"/>
+                                    </Grid>
+                                </Button>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!--#region Tree Viewer-->
+
+                        <TreeView Name="XmlTree"
+                                Grid.Row="1" Grid.Column="0" Margin="5" 
+                                Tag="XML Ağacında İçerik Yok" 
+                                ItemTemplate="{StaticResource treeViewTemplate}" 
+                                ItemsSource="{Binding Path=JsonTreeView, NotifyOnSourceUpdated=True, Mode=OneWay}"
+                                Style="{DynamicResource CustomTreeView}"
+                                ItemContainerStyle="{StaticResource CustomTreeViewStyle}"
+                                IsTextSearchEnabled="True" ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}"/>
+
+                        <!--#endregion-->
+
+                        <GridSplitter Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Width="5" Margin="0 5 0 5" HorizontalAlignment="Stretch" Opacity=".1"/>
+
+                        <!--#region Editor-->
+
+                        <ComboBox Name="HighlightingComboBoxXml"
+                                  Visibility="Collapsed" IsEnabled="False"
+                                  Width="50" Height="30"
+                                  Grid.Column="2" Grid.Row="1" 
+                                  SelectedItem="{Binding SyntaxHighlighting, ElementName=AvalonJsonEditor}"
+                                  ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"/>
+
+                        <avalonEdit:TextEditor x:Name="AvalonXmlEditor"
+                                               Grid.Column="2" Grid.Row="1" 
+                                               Background="{StaticResource ThemeColor1}" 
+                                               Foreground="{StaticResource BlueGrey200}" 
+                                               ShowLineNumbers="True" 
+                                               FontFamily="Consolas" 
+                                               FontSize="10pt">
+                            <i:Interaction.Behaviors>
+                                <avalon:AvalonEditBehaviour GiveMeTheText="{Binding XmlText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </i:Interaction.Behaviors>
+                        </avalonEdit:TextEditor>
+
+                        <!--#endregion-->
+                    </Grid>
+
+                    <Grid x:Name="GetFromWebGridXml" Visibility="Hidden">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="GetXmlFromWebClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="JSON İçeriğini Webden Getir" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35">
+                                    <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                        <Grid Margin="0 0 10 0">
+                                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBox x:Name="GetXmlURL"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Bir URL adresi girin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="20 10 10 10" Click="GetXmlFromWeb">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Getir" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="GetXmlFromWebClose">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="İptal" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--Seperator-->
+                    <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Column="2"
+                            Width="1" CornerRadius="1" Height="Auto" Margin="0 10 0 10"
+                            HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+                    <!--Side Actions-->
+                    <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center" Margin="15 0 5 0">
+                        <!--Save As-->
+                        <ToggleButton Style="{StaticResource CustomToggleButton}" 
+                                      Width="25" Height="25" Margin="0 15 0 15" 
+                                      ToolTip="Farklı Kaydet" Click="SaveAsXmlString">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Width="22" Stretch="Uniform" Data="{Binding Source={StaticResource SaveAs}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!--Copy-->
+                        <ToggleButton Style="{StaticResource CustomToggleButton}" 
+                                      Width="25" Height="25" Margin="0 15 0 15" 
+                                      ToolTip="Panoya Kopyala" Click="CopyToClipboardXml">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Width="22" Stretch="Uniform" Data="{Binding Source={StaticResource Copy}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+        <!--Seperator-->
+        <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Row="1" Grid.Column="1"
+                Width="Auto" CornerRadius="1" Height="1" Margin="10 0 10 0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+
+        <!--Bottom Tab Actions-->
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource CustomButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Path Height="15" Width="35" Stretch="Uniform" 
+                      Data="{Binding ElementName=TabControl, Converter={StaticResource TabControlNavigatorConverter}}" 
+                      Fill="{StaticResource BlueGrey200}"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

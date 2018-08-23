@@ -1,0 +1,703 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Poli.Makro.Converters">
+
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--#region Sidebar Menu Toggle Button-->
+
+    <!--#region Converter -->
+
+    <converters:SideMenuItemColorConverter x:Key="SideMenuItemColorConverter"/>
+
+    <!--#endregion -->
+
+    <!--#region Color Definitions-->
+
+    <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+    <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+
+    <!--#endregion -->
+
+    <Style x:Key="SidebarMenuToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" CornerRadius="3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!-- Item Color Circle-->
+                            <Ellipse x:Name="Ellipse" Height="5" Width="5" Stretch="Fill" Fill="{Binding ElementName=contentPresenter, Path=Content, Converter={StaticResource SideMenuItemColorConverter}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <!-- Content Base-->
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- When toogle button checked -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <!-- Checked Action-->
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region Ellipse Height and Width Animations-->
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="8"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="8"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="8"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="8"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <!-- Unchecked Action-->
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region Ellipse Height and Width Animations-->
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="5"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="5"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="5"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="5"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="Button.IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <!--<Setter Property="Border.Background" TargetName="backBorder" Value="{Binding ElementName=contentPresenter, Path=Content, Converter={StaticResource SideMenuItemColorConverter}}"/>-->
+
+                            <!-- Mouse Over Action-->
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region border Margin Animations-->
+
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="1 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="2 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="3 0 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <!-- Mouse Leave Action-->
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region border Margin Animations-->
+
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="3 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="2 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="0 0 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Border.ToolTip" TargetName="border" Value="This item currently is not accessible (it will be reactivated soon.)"/>
+                            <Setter Property="Opacity" TargetName="border" Value=".7"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion -->
+
+    <!--#region Custom Toggle Button -->
+
+    <Style x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid x:Name="Grid">
+                        <Border Style="{StaticResource HiddenClikableAreaforButtons}"/>
+                        <ContentPresenter x:Name="contentPresenter" 
+                                          Focusable="False" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}" 
+                                          RecognizesAccessKey="True" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Path.Opacity" TargetName="contentPresenter" Value=".7"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Path.Opacity" TargetName="contentPresenter" Value=".6"/>
+                            <Setter Property="Margin" TargetName="Grid" Value="0 2 0 0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region Star Toggle Button -->
+
+    <Style x:Key="StarToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid x:Name="Grid">
+                        <Border Style="{DynamicResource HiddenClikableAreaforButtons}"/>
+                        <Path x:Name="StarPath" Height="18"
+                              Fill="{StaticResource BlueGrey500}" Stretch="Uniform"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              Data="{Binding Source={StaticResource Star}, Path=Data}"/>
+
+                        <Path x:Name="FilledStarPath" Height="14"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              Fill="{StaticResource Yellow500}" Stretch="Uniform"
+                              Data="{Binding Source={StaticResource StarFilled}, Path=Data}" Visibility="Hidden"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Path.Visibility" TargetName="FilledStarPath" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Path.Visibility" TargetName="FilledStarPath" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Path.Fill" TargetName="FilledStarPath" Value="{DynamicResource Yellow600}"/>
+                            <Setter Property="Margin" TargetName="Grid" Value="0 2 0 0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region Eye Toggle Button -->
+
+    <Style x:Key="EyeToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid x:Name="Grid">
+                        <Path x:Name="Eye" Height="{TemplateBinding Height}"
+                              Fill="{TemplateBinding Background}" Stretch="Uniform"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              Data="{Binding Source={StaticResource Eye}, Path=Data}"/>
+
+                        <Path x:Name="EyeOutline" Height="15"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              Fill="{TemplateBinding Background}" Stretch="Uniform"
+                              Data="{Binding Source={StaticResource EyeOutline}, Path=Data}" Visibility="Hidden"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Path.Visibility" TargetName="EyeOutline" Value="Visible"/>
+                            <Setter Property="Path.Visibility" TargetName="Eye" Value="Hidden"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Path.Opacity" TargetName="EyeOutline" Value=".7"/>
+                            <Setter Property="Path.Opacity" TargetName="Eye" Value=".7"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Path.Opacity" TargetName="EyeOutline" Value=".6"/>
+                            <Setter Property="Path.Opacity" TargetName="Eye" Value=".6"/>
+                            <Setter Property="Margin" TargetName="Grid" Value="0 2 0 0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--#endregion-->
+    
+    <!--#region Dot Toggle Button -->
+
+    <Style x:Key="DotToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Ellipse x:Name="Ellipse" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" 
+                             StrokeThickness="2" Stroke="{StaticResource ThemeColor3}"/>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource BlueGrey200}"/>
+                            <Setter Property="Margin" Value="10"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource BlueGrey200}"/>
+                            <Setter TargetName="Ellipse" Property="Opacity" Value=".9"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource ThemeColor3}"/>
+                            <Setter TargetName="Ellipse" Property="Opacity" Value=".8"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--#endregion-->
+
+
+    <!--#region Clickable Text Toggle Button -->
+
+    <Style x:Key="ClickableTexttoggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <Grid>
+                            <TextBlock x:Name="TbA" 
+                                       Text="{TemplateBinding Content}" 
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontWeight="{TemplateBinding FontWeight}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="TbB" 
+                                       Text="{TemplateBinding Content}" 
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                       TextDecorations="Underline"
+                                       Visibility="Hidden"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Visibility" TargetName="TbA" Value="Hidden"/>
+                            <Setter Property="Visibility" TargetName="TbB" Value="Visible"/>
+                            <Setter Property="Foreground" TargetName="TbB" Value="{DynamicResource Blue500}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="false">
+                            <Setter Property="Visibility" TargetName="TbA" Value="Visible"/>
+                            <Setter Property="Visibility" TargetName="TbB" Value="Hidden"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="TbB" Value="{DynamicResource Blue700}"/>
+                            <Setter Property="Margin" TargetName="border" Value="0 2 0 0"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="TbA" Value="{DynamicResource BlueGrey200}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--#endregion-->
+
+    <!--#region Poli Makro Sidebar Menu Toggle Button-->
+
+    <Style x:Key="PoliMakroSidebarMenuToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ResourceKey=White}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="border" Background="{TemplateBinding Background}">
+                        </Border>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!-- Item Color Circle-->
+                            <Ellipse x:Name="Ellipse" Height="5" Width="5" Stretch="Fill" Fill="{Binding ElementName=contentPresenter, Path=Content, Converter={StaticResource SideMenuItemColorConverter}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <!-- Content Base-->
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" 
+                                              Focusable="False" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" 
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- When toogle button checked -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <!-- Checked Action-->
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region Ellipse Height and Width Animations-->
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="8"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="8"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="8"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="8"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <!-- Unchecked Action-->
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region Ellipse Height and Width Animations-->
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="5"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="5"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Ellipse">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="5"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="5"/>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="Button.IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <!--<Setter Property="Border.Background" TargetName="backBorder" Value="{Binding ElementName=contentPresenter, Path=Content, Converter={StaticResource SideMenuItemColorConverter}}"/>-->
+
+                            <!-- Mouse Over Action-->
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region border Margin Animations-->
+
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="1 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="2 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="3 0 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <!-- Mouse Leave Action-->
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--#region border Margin Animations-->
+
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="3 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="2 0 0 0"/>
+                                            <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="0 0 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+
+                                        <!--#endregion -->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Border.ToolTip" TargetName="border" Value="This item currently is not accessible (it will be reactivated soon.)"/>
+                            <Setter Property="Opacity" TargetName="border" Value=".7"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion -->
+
+    <!--#region Custom Toggle Button-->
+
+    <!--#endregion Poli Makro Sidebar Menu Toggle Button-->
+
+    <Style x:Key="ExpandCollapseToggleButton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ResourceKey=White}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border" CornerRadius="3" Background="{StaticResource BlueGrey600}" Height="35" Margin="5" Padding="10 2 10 2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Path x:Name="Path" Height="13" Stretch="Uniform" Data="{Binding Source={StaticResource Expand}, Path=Data}" Fill="{StaticResource BlueGrey50}"/>
+
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1"
+                                              Focusable="False" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" 
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Path" Property="Path.Data" Value="M 4.71875 3.28125 L 3.28125 4.71875 L 10.5625 12 L 5 12 L 5 14 L 14 14 L 14 5 L 12 5 L 12 10.5625 Z M 27.28125 3.28125 L 20 10.5625 L 20 5 L 18 5 L 18 14 L 27 14 L 27 12 L 21.4375 12 L 28.71875 4.71875 Z M 5 18 L 5 20 L 10.5625 20 L 3.28125 27.28125 L 4.71875 28.71875 L 12 21.4375 L 12 27 L 14 27 L 14 18 Z M 18 18 L 18 27 L 20 27 L 20 21.4375 L 27.28125 28.71875 L 28.71875 27.28125 L 21.4375 20 L 27 20 L 27 18 Z"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Opacity" Value=".8"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Opacity" Value=".7"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Border" Property="Opacity" Value=".5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion -->
+
+    <Style x:Key="MaximinimizeTogglebutton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ToolTip" Value="Ekranı Kapla"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border Style="{StaticResource HiddenClikableAreaforButtons}"/>
+                        <Grid x:Name="Paths" Visibility="Collapsed">
+                            <Path x:Name="Paths1" Width="5" Height="1" Stretch="UniformToFill"
+                                  Data="{Binding Source={StaticResource In}, Path=Data}"
+                                  Fill="{StaticResource BlueGrey200}" Margin="2 0 0 0"
+                                  HorizontalAlignment="Left"/>
+                            <Path x:Name="Paths2" Width="5" Height="1" Stretch="UniformToFill"
+                                  Data="{Binding Source={StaticResource In}, Path=Data}"
+                                  Fill="{StaticResource BlueGrey200}" Margin="2 0 0 0"
+                                  HorizontalAlignment="Left">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="90"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                        <Path x:Name="Path" Width="20" Height="20" Stretch="Fill"
+                              Data="{Binding Source={StaticResource Fill}, Path=Data}"
+                              Fill="{StaticResource BlueGrey200}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Visibility" TargetName="Path" Value="Collapsed"/>
+                            <Setter Property="Visibility" TargetName="Paths" Value="Visible"/>
+
+                            <Setter Property="ToolTip" Value="Eski Haline Getir"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Fill" TargetName="Path" Value="{StaticResource BlueGrey100}"/>
+                            <Setter Property="Fill" TargetName="Paths1" Value="{StaticResource BlueGrey100}"/>
+                            <Setter Property="Fill" TargetName="Paths2" Value="{StaticResource BlueGrey100}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Fill" TargetName="Path" Value="{StaticResource BlueGrey300}"/>
+                            <Setter Property="Fill" TargetName="Paths1" Value="{StaticResource BlueGrey300}"/>
+                            <Setter Property="Fill" TargetName="Paths2" Value="{StaticResource BlueGrey300}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Fill" TargetName="Path" Value="{StaticResource BlueGrey400}"/>
+                            <Setter Property="Fill" TargetName="Paths1" Value="{StaticResource BlueGrey400}"/>
+                            <Setter Property="Fill" TargetName="Paths2" Value="{StaticResource BlueGrey400}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="TopMostTogglebutton" TargetType="{x:Type ToggleButton}">
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>-->
+        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ToolTip" Value="Üstte Tut"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border Style="{StaticResource HiddenClikableAreaforButtons}"/>
+                        <Path x:Name="Path1" Width="20" Height="20" Stretch="UniformToFill"
+                                  Data="{Binding Source={StaticResource Pin}, Path=Data}"
+                                  Fill="{StaticResource BlueGrey200}" Margin="2 0 0 0"
+                                  HorizontalAlignment="Left"/>
+                        <Path x:Name="Path2" Width="20" Height="20" Stretch="UniformToFill"
+                                  Data="{Binding Source={StaticResource Unpin}, Path=Data}"
+                                  Fill="{StaticResource BlueGrey200}" Margin="2 0 0 0"
+                                  HorizontalAlignment="Left" Visibility="Collapsed"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Visibility" TargetName="Path1" Value="Collapsed"/>
+                            <Setter Property="Visibility" TargetName="Path2" Value="Visible"/>
+
+                            <Setter Property="ToolTip" Value="Normal Pencere Önceliği"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Fill" TargetName="Path1" Value="{StaticResource BlueGrey100}"/>
+                            <Setter Property="Fill" TargetName="Path2" Value="{StaticResource BlueGrey100}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Fill" TargetName="Path1" Value="{StaticResource BlueGrey300}"/>
+                            <Setter Property="Fill" TargetName="Path2" Value="{StaticResource BlueGrey300}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Fill" TargetName="Path1" Value="{StaticResource BlueGrey400}"/>
+                            <Setter Property="Fill" TargetName="Path2" Value="{StaticResource BlueGrey400}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

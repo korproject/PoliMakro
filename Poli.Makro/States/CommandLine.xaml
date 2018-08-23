@@ -1,0 +1,25 @@
+﻿<Window x:Class="Poli.Makro.States.CommandLine"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:avalon="clr-namespace:Poli.Makro.Core.Helpers.Avalon;assembly=Poli.Makro.Core"
+        xmlns:ie="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d" WindowStyle="None" Background="Transparent" AllowsTransparency="True"
+        Title="CommandLine" Height="300" Width="600">
+    <Grid>
+        <avalonEdit:TextEditor x:Name="AvalonCodeEditor"
+                                               Grid.Column="0" Grid.Row="1" 
+                                               Background="{StaticResource ThemeColor1}" 
+                                               Foreground="{StaticResource BlueGrey200}" 
+                                               ShowLineNumbers="True" 
+                                               FontFamily="Consolas" 
+                                               FontSize="10pt">
+            <i:Interaction.Behaviors>
+                <avalon:AvalonEditBehaviour GiveMeTheText="{Binding JsonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </i:Interaction.Behaviors>
+        </avalonEdit:TextEditor>
+    </Grid>
+</Window>

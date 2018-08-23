@@ -1,0 +1,45 @@
+﻿<Application x:Class="Poli.Makro.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Poli.Makro"
+             StartupUri="Main/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Icons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Colors.xaml"/>
+
+                <!-- ToggleButtons -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ToggleButtons.xaml"/>
+
+                <!-- Buttons -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Buttons.xaml"/>
+
+                <!-- Expanders -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Expanders.xaml"/>
+
+                <!-- ScrollViewers -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ScrollViewers.xaml"/>
+                
+                <!-- ScrollBars -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/ScrollBars.xaml"/>
+
+                <!-- TabControls -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TabControls.xaml"/>
+
+                <!-- TabItems -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TabItems.xaml"/>
+
+                <!-- TextBoxes -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TextBoxes.xaml"/>
+
+                <!-- TextBlock -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/TextBlock.xaml"/>
+
+                <!-- Tooltips -->
+                <ResourceDictionary Source="pack://application:,,,/Poli.Makro;component/UICollection/Styles/Tooltips.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

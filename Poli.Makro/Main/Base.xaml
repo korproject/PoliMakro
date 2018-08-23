@@ -1,0 +1,287 @@
+﻿<Window x:Class="Poli.Makro.Main.Base"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:clipboard="clr-namespace:Poli.Makro.States.Clipboard"
+        xmlns:jsonxmlxamlrss="clr-namespace:Poli.Makro.States.JXR"
+        xmlns:converters="clr-namespace:Poli.Makro.Converters"
+        xmlns:Color="clr-namespace:Poli.Makro.States.Color"
+        xmlns:codeLib="clr-namespace:Poli.Makro.States.Code"
+        xmlns:settings="clr-namespace:Poli.Makro.States.Settings"
+        xmlns:notify="http://www.hardcodet.net/taskbar"
+        mc:Ignorable="d"
+        Title="Poli Makro"
+        ResizeMode="CanResize" Icon="/Resources/Thalita-Torres-Office-Pen-rubber-sharpener.ico"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None"
+        Loaded="Window_OnLoaded" SizeChanged="Window_SizeChanged"
+        SourceInitialized="Window_SourceInitialized"
+        WindowState="{Binding WindowState}" Topmost="{Binding WindowTopMost}"
+        MinWidth="{Binding WindowMinWidth, FallbackValue=600}" MinHeight="{Binding WindowMinHeight, FallbackValue=600}"
+        Width="{Binding WindowWidth, FallbackValue=700}" Height="{Binding WindowHeight, FallbackValue=700}"
+        Top="{Binding WindowTop, FallbackValue=0}" Left="{Binding WindowLeft}">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="TaskbarItemInfo">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfo Description="Yenden Yükle" 
+                                 ImageSource="/Resources/icons8-reset-filled-40.png" 
+                                 Command="{Binding RestartAppComm}"/>
+                <ThumbButtonInfo Description="Kapat" 
+                                 ImageSource="/Resources/icons8-delete-filled-40.png" 
+                                 Command="{Binding CloseAppComm}"/>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+    
+    <Window.Resources>
+        <!--#region Converters -->
+
+        <converters:Bool2ToggleVisibilityCollapsedConverter x:Key="Bool2ToggleVisibilityCollapsedConverter" />
+        <converters:Bool2ToggleVisibilityConverter x:Key="Bool2ToggleVisibilityConverter" />
+        <converters:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter" />
+        <converters:MultipleParameterConverter x:Key="MultipleParameterConverter" />
+        <converters:StringMaxLenghtTreeDotsConverter x:Key="StringMaxLenghtTreeDotsConverter" />
+        <converters:Null2VisibilityConverter x:Key="Null2VisibilityConverter" />
+        <converters:FirstCharacterConverter x:Key="FirstCharacterConverter" />
+        <converters:Selection2VisibilityConverter x:Key="Selection2VisibilityConverter"/>
+        
+        <!--#endregion -->
+
+        <!--#region -->
+
+
+        <!--#endregion -->
+    </Window.Resources>
+
+    <Border Background="{StaticResource ThemeColor1}" CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <notify:TaskbarIcon x:Name="MyNotifyIcon"
+                        IconSource="/Resources/Thalita-Torres-Office-Pen-rubber-sharpener.ico"
+                        ToolTipText="Poli Makro">
+                <notify:TaskbarIcon.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Renkler">
+                            <MenuItem.Icon>
+                                <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource ColorPalette}, Path=Data}"/>
+                            </MenuItem.Icon>
+                            <MenuItem Header="Renk Seçici Mini" Click="ColorPickerMini_Click">
+                                <MenuItem.Icon>
+                                    <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource ColorPicker}, Path=Data}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                        </MenuItem>
+
+                        <MenuItem Header="Üst Komutlar">
+                            <MenuItem.Icon>
+                                <Path Height="15" Width="15" Stretch="UniformToFill"
+                                      Fill="{StaticResource BlueGrey300}"
+                                      Data="{Binding Source={StaticResource Circle}, Path=Data}"/>
+                            </MenuItem.Icon>
+
+                            <MenuItem Header="Uygulamayı Üstte Tut" Command="{Binding Path=WindowTopMostComm}">
+                                <MenuItem.Icon>
+                                    <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource Pin}, Path=Data}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Uygulamayı Yeniden Yükle" Command="{Binding Path=RestartAppComm}">
+                                <MenuItem.Icon>
+                                    <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource Refresh}, Path=Data}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Tam Ekran/Normal" Command="{Binding Path=WindowStateComm}">
+                                <MenuItem.Icon>
+                                    <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource Fill}, Path=Data}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Minimize Et" Command="{Binding Path=MinimizeComm}">
+                                <MenuItem.Icon>
+                                    <StackPanel Orientation="Vertical" Margin="0 15 0 0">
+                                        <Path x:Name="Path1" Width="5" Height="1" Stretch="UniformToFill"
+                                              Data="{Binding Source={StaticResource Line}, Path=Data}"
+                                              Fill="{StaticResource BlueGrey200}" Margin="2 0 0 0"
+                                              HorizontalAlignment="Left"/>
+
+                                        <Path x:Name="Path2" Width="15" Height="1" Stretch="UniformToFill"
+                                              Data="{Binding Source={StaticResource Line}, Path=Data}"
+                                              Fill="{StaticResource BlueGrey200}" Margin="0 5 0 0"/>
+                                    </StackPanel>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Uygulamayı Kapat" Command="{Binding Path=CloseAppComm}">
+                                <MenuItem.Icon>
+                                    <Path Height="10" Width="10" Stretch="UniformToFill"
+                                          Fill="{StaticResource BlueGrey300}"
+                                          Data="{Binding Source={StaticResource Cross}, Path=Data}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </ContextMenu>
+                </notify:TaskbarIcon.ContextMenu>
+            </notify:TaskbarIcon>
+
+
+            <TabControl x:Name="SideBarTabControl" Grid.Row="1" Grid.Column="0"
+                        TabStripPlacement="Left" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch"
+                        Background="{StaticResource ResourceKey=ThemeColor1}" 
+                        Style="{DynamicResource ResourceKey=PoliMakroTabControlBasedSideBar}"
+                        SelectionChanged="SideBarTabControl_SelectionChanged">
+
+                <TabItem Header="Hoş Geldin" Visibility="Collapsed"/>
+                <TabItem Header="Pano Yöneticisi" Tag="{Binding Source={StaticResource ResourceKey=Clipboard}, Path=Data}" 
+                         Style="{StaticResource PoliMakroTabItemBasedSideBar}"/>
+                
+                <TabItem Header="JSON XML RSS" Tag="{Binding Source={StaticResource ResourceKey=Hierarchy}, Path=Data}" 
+                         Style="{StaticResource PoliMakroTabItemBasedSideBar}"/>
+
+                <TabItem Header="Renkler" Tag="{Binding Source={StaticResource ResourceKey=ColorPalette1em}, Path=Data}" 
+                     Style="{StaticResource ResourceKey=PoliMakroTabItemBasedSideBar}"/>
+
+                <TabItem  Header="Kodlar" Tag="{Binding Source={StaticResource ResourceKey=Code}, Path=Data}" 
+                         Style="{StaticResource ResourceKey=PoliMakroTabItemBasedSideBar}"/>
+
+                <!--<TabItem Header="Metinsel" Tag="{Binding Source={StaticResource ResourceKey=TextAlignCenter}, Path=Data}" 
+                         Style="{StaticResource ResourceKey=PoliMakroTabItemBasedSideBar}"/>-->
+
+                <TabItem Header="Ayarlar" Tag="{Binding Source={StaticResource ResourceKey=Setting}, Path=Data}" 
+                         Style="{StaticResource ResourceKey=PoliMakroTabItemBasedSideBar}">
+                </TabItem>
+            </TabControl>
+
+            <!--#region Main Content-->
+            
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--#region Main TabControl-->
+                
+                <TabControl x:Name="TabControl" Style="{StaticResource NoHeaderTabControl}" SelectedIndex="{Binding ElementName=SideBarTabControl, Path=SelectedIndex}">
+                    <TabItem>
+                        <Border Background="{StaticResource ThemeColor1}">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Image Height="300" Width="300" Source="/Resources/pen-rubber-sharpener-icon.png" Opacity=".7"/>
+                                <TextBlock Text="Poli Makro" FontSize="24" FontWeight="DemiBold"
+                                   HorizontalAlignment="Center" Margin="-20 0 0 0"
+                                   Foreground="{StaticResource BlueGrey200}"/>
+                            </StackPanel>
+                        </Border>
+                    </TabItem>
+                    <!--Clipboard Monitor-->
+                    <TabItem>
+                        <clipboard:ClipboardRecords/>
+                    </TabItem>
+                    
+                    <TabItem>
+                        <jsonxmlxamlrss:JXR_Editor/>
+                    </TabItem>
+                    <!--2-->
+                    <TabItem>
+                        <Color:Color/>
+                    </TabItem>
+                    <!--3-->
+                    <TabItem>
+                        <codeLib:Code/>
+                    </TabItem>
+                    <!--3-->
+                    <TabItem>
+                        <settings:Settings/>
+                    </TabItem>
+                </TabControl>
+
+                <!--#endregion Main TabControl-->
+
+            </Grid>
+
+            <Grid Grid.ColumnSpan="2">
+                <TextBlock x:Name="Title" FontSize="17" FontFamily="Segoe UI Semilight" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{StaticResource BlueGrey300}"/>
+
+                <Border Opacity=".00001" Background="{StaticResource White}" 
+                        MouseLeftButtonDown="MoveLayer_MouseLeftButtonDown" 
+                        PreviewMouseLeftButtonUp="MoveLayer_PreviewMouseLeftButtonUp" 
+                        PreviewMouseLeftButtonDown="MoveLayer_PreviewMouseLeftButtonDown" 
+                        PreviewMouseMove="MoveLayer_PreviewMouseMove"/>
+            </Grid>
+            
+            <Button Grid.Row="1" Click="OpenCommandConsole"
+                    Style="{StaticResource CustomButtonStyle}" 
+                    Background="Transparent"
+                    VerticalAlignment="Bottom">
+                <Path Height="20" Width="30" Stretch="Uniform"
+                      Data="{Binding Source={StaticResource Console}, Path=Data}"
+                      Fill="{StaticResource BlueGrey200}"/>
+            </Button>
+            <Border Background="{StaticResource ThemeColor2}" CornerRadius="10 0 0 0">
+                <Grid>
+                    <Border Height="40" Width="40" CornerRadius="40" 
+                            Background="{StaticResource ThemeColor3}" 
+                            ToolTip="{Binding Path=UserInfo.UserName}">
+                        <TextBlock Text="{Binding Path=UserInfo.UserName, Converter={StaticResource FirstCharacterConverter}}" 
+                               Foreground="{StaticResource BlueGrey200}"
+                               FontSize="25"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               TextAlignment="Center"/>
+                    </Border>
+                    <Border Height="40" Width="40" CornerRadius="40"
+                            ToolTip="{Binding Path=UserInfo.UserName}"
+                            Visibility="{Binding Path=UserInfo.UserImage, Converter={StaticResource Null2VisibilityConverter}}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Path=UserInfo.UserImage}"/>
+                        </Border.Background>
+                    </Border>
+
+                </Grid>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0 0 20 0">
+                <ToggleButton Style="{StaticResource TopMostTogglebutton}" Margin="10"
+                              Command="{Binding WindowTopMostComm}"
+                              IsChecked="{Binding Path=WindowTopMostIsChecked}"/>
+                <Button Style="{StaticResource MinimizeWindowButton}" Margin="10" 
+                        Command="{Binding MinimizeComm}" ToolTip="Pencereyi görev çubuğuna küçült"/>
+                <ToggleButton Style="{StaticResource MaximinimizeTogglebutton}" Margin="10" 
+                              Command="{Binding WindowStateComm}" 
+                              IsChecked="{Binding Path=MaximinimizeIsChecked}"/>
+                <Button Style="{StaticResource ReloadWindowButton}" Margin="10" 
+                        Command="{Binding RestartAppComm}" ToolTip="Uygulamayı yeniden başlat"
+                        Click="DisposeSomethings"/>
+                <Button Style="{StaticResource CloseWindowButton}" Margin="10"
+                        Command="{Binding CloseAppComm}" ToolTip="Uygulamayı kapat"
+                        Click="DisposeSomethings"/>
+            </StackPanel>
+
+            <Border Grid.Row="2" Grid.Column="0"
+                    Background="{StaticResource ThemeColor2}" 
+                    CornerRadius="0 0 0 10"/>
+        </Grid>
+    </Border>
+</Window>

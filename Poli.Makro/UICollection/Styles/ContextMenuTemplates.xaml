@@ -1,0 +1,97 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+
+    <ContextMenu x:Key="ColorListViewsContextMenu" VerticalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Semilight">
+        <!--Hex Code Copy-->
+        <MenuItem Header="{Binding Path=HexCode}" Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=HexCode}">
+            <MenuItem.Icon>
+                <Grid>
+                    <Ellipse Height="15" Width="15" Fill="{Binding Path=HexCode}" StrokeThickness="1" Stroke="{Binding Path=InverseColorHex_2}"/>
+                </Grid>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <!--Rgb Code Copy-->
+        <MenuItem Header="{Binding Path=RgbCode}" Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RgbCode}">
+            <MenuItem.Icon>
+                <Grid>
+                    <Ellipse Height="15" Width="15" Fill="{Binding Path=HexCode}" StrokeThickness="1" Stroke="{Binding Path=InverseColorHex_2}"/>
+                </Grid>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <!--Rgb Code Copy-->
+        <MenuItem Header="{Binding Path=ArgbCode}" Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=ArgbCode}">
+            <MenuItem.Icon>
+                <Grid>
+                    <Ellipse Height="15" Width="15" Fill="{Binding Path=HexCode}" StrokeThickness="1" Stroke="{Binding Path=InverseColorHex_2}"/>
+                </Grid>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <!--Inverse Hex Code 1 Copy-->
+        <MenuItem Header="{Binding Path=InverseColorHex_1}" Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=InverseColorHex_1}">
+            <MenuItem.Icon>
+                <Grid>
+                    <Path Stretch="Uniform" Height="10" Width="15" Data="{Binding Source={StaticResource Reverse}, Path=Data}" Fill="{Binding Path=InverseColorHex_1}" HorizontalAlignment="Center"/>
+                </Grid>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <!--Inverse Hex Code 2 Copy-->
+        <MenuItem Header="{Binding Path=InverseColorHex_2}"  Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=InverseColorHex_2}">
+            <MenuItem.Icon>
+                <Grid>
+                    <Path Stretch="Uniform" Height="10" Width="15" Data="{Binding Source={StaticResource Reverse}, Path=Data}" Fill="{Binding Path=InverseColorHex_2}" HorizontalAlignment="Center"/>
+                </Grid>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <!--Del Item-->
+        <MenuItem Header="Bu öğeyi Sil" Command="{Binding Path=DataContext.DeleteColorComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowId}">
+            <MenuItem.Icon>
+                <Path Stretch="Uniform" Height="12" Data="{Binding Source={StaticResource Trash}, Path=Data}" Fill="{StaticResource BlueGrey200}" HorizontalAlignment="Center"/>
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
+
+    <ContextMenu x:Key="ColorGroupItemContextMenu" VerticalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Semilight">
+        <MenuItem Header="Grup Başlığını Kopyala" Command="{Binding Path=DataContext.CopyColorStringComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=Title}">
+            <MenuItem.Icon>
+                <Path Stretch="Uniform" Height="12" Data="{Binding Source={StaticResource Copy}, Path=Data}"
+                          Fill="{StaticResource BlueGrey200}" HorizontalAlignment="Center"/>
+            </MenuItem.Icon>
+        </MenuItem>
+
+        <MenuItem Header="Bu Grubu Sil" Command="{Binding Path=DataContext.DeleteColorGroupComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowId}">
+            <MenuItem.Icon>
+                <Path Stretch="Uniform" Height="12" Data="{Binding Source={StaticResource Trash}, Path=Data}"
+                          Fill="{StaticResource BlueGrey200}" HorizontalAlignment="Center"/>
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
+
+    <!--Poli Makro NotifyIcon Context Menu-->
+    <ContextMenu x:Key="PoliMakroContextMenu">
+        <MenuItem Header="Üst Komutlar">
+            <MenuItem.Icon>
+                <Path Height="15" Width="15" Stretch="UniformToFill"
+                             Fill="{StaticResource BlueGrey300}"
+                             Data="{Binding Source={StaticResource Circle}, Path=Data}"/>
+            </MenuItem.Icon>
+
+            <MenuItem Header="Uygulamayı Kapat" 
+                  Command="{Binding Path=DataContext.CloseAppComm, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <MenuItem.Icon>
+                    <Path Height="15" Width="15" Stretch="UniformToFill"
+                             Fill="{StaticResource BlueGrey300}"
+                             Data="{Binding Source={StaticResource Cross}, Path=Data}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+    </ContextMenu>
+
+
+</ResourceDictionary>

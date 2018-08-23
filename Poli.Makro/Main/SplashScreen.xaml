@@ -1,0 +1,34 @@
+﻿<Window x:Class="Poli.Makro.Main.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Loaded="SplashScreen_OnLoaded"
+        Title="Poli Makro" Width="800" Height="450"
+        WindowState="Normal" WindowStartupLocation="CenterScreen" Topmost="True" Background="Transparent"
+        WindowStyle="None" AllowsTransparency="True">
+    <Grid>
+        <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Opacity=".50"
+                CornerRadius="10">
+            <Border.Background>
+                <ImageBrush ImageSource="/Poli.Makro;component/Resources/mountain.png" Stretch="UniformToFill"/>
+            </Border.Background>
+        </Border>
+
+        <Border Background="{StaticResource ThemeColor1}" CornerRadius="10">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Height="300" Width="300" Source="/Resources/pen-rubber-sharpener-icon.png" Opacity=".7"/>
+                <TextBlock Text="Poli Makro" FontSize="24" FontWeight="DemiBold"
+                                   HorizontalAlignment="Center" Margin="-20 0 0 0"
+                                   Foreground="{StaticResource BlueGrey200}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Opacity=".95"
+                CornerRadius="10"
+                MouseLeftButtonDown="Border_FareSolTıkBasıldığında" 
+                PreviewMouseLeftButtonUp="Border_ÖnizlemeFareSolTıkKalktığında" 
+                PreviewMouseLeftButtonDown="Border_ÖnizlemeFareSolTıkBastığında" 
+                PreviewMouseMove="Border_ÖnizlemeFareyleTaşıma"/>
+
+        <!--<ProgressBar Height="10" Style="{DynamicResource CustomProgressBar}"/>-->
+    </Grid>
+</Window>

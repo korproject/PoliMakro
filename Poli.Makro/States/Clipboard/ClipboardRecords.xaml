@@ -1,0 +1,838 @@
+﻿    <UserControl x:Class="Poli.Makro.States.Clipboard.ClipboardRecords"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Poli.Makro.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <!--#region Converters -->
+
+        <converters:Bool2ToggleVisibilityConverter x:Key="Bool2ToggleVisibilityConverter" />
+        <converters:MultipleParameterConverter x:Key="MultipleParameterConverter" />
+        <converters:StringMaxLenghtTreeDotsConverter x:Key="StringMaxLenghtTreeDotsConverter" />
+        <converters:ClipboardInputActionConverter x:Key="ClipboardInputActionConverter" />
+        <converters:TabControlNavigatorConverter x:Key="TabControlNavigatorConverter" />
+
+        <!--#endregion -->
+
+        <!--#region Add Lang ComboBox Datatemplate-->
+
+        <DataTemplate x:Key="DataTemplateforAddLangCombo">
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource Date}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding Path=Title, Converter={StaticResource StringMaxLenghtTreeDotsConverter}}" Foreground="{StaticResource BlueGrey400}"/>
+                    <TextBlock Text="{Binding Path=Count, StringFormat={}({0})}" Margin="10 0 0 0" Foreground="{StaticResource BlueGrey400}"/>
+                </StackPanel>
+
+                <Grid.ToolTip>
+                    <ToolTip Style="{DynamicResource CustomTooltip}" Content="{Binding Path=Title}"/>
+                </Grid.ToolTip>
+            </Grid>
+        </DataTemplate>
+
+        <!--#endregion -->
+
+        <!--#region for Records DataTemplate-->
+
+        <DataTemplate x:Key="RecordsDataTemplate">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.ColumnSpan="2" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--#region Header-->
+
+                    <StackPanel Orientation="Vertical" Grid.ColumnSpan="2">
+                        <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource HashTag}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=OrderNumber}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource Date}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=DateTime}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Path=Action, Converter={StaticResource ClipboardInputActionConverter}}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=Action}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource Binary}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=Size, StringFormat={}{0} Kb}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator Background="{StaticResource BlueGrey500}" Height="1" VerticalAlignment="Bottom" Margin="0 5 0 0"/>
+                    </StackPanel>
+
+                    <!--#endregion -->
+
+                    <!--#region Body -->
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 10 0 10">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Path=ContentImage}" Stretch="Uniform" Height="30">
+                                <Image.ToolTip>
+                                    <Image Source="{Binding Path=ContentImage}" Stretch="Uniform" Height="300"/>
+                                </Image.ToolTip>
+                            </Image>
+                            <!--<TextBlock Text="Tür: " FontWeight="SemiBold" Foreground="{StaticResource BlueGrey700}" VerticalAlignment="Center"/>-->
+                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey600}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="10 0 0 0">
+                            <TextBlock Text="{Binding Path=ContentTextPreview}" 
+                                       Width="600" 
+                                       TextTrimming="CharacterEllipsis" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="{StaticResource BlueGrey200}"
+                                       ToolTip="{Binding Path=ContentText}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 20 0">
+                        <Button Content="Sil" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}"  Click="DeleteRecord"/>
+                        <Button Content="Kopyala" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}" Click="CopyRecord"/>
+                        <Button Content="Farklı Kaydet" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}" Click="SaveAsRecord"/>
+
+                        <ToggleButton Style="{StaticResource StarToggleButton}" Margin="50 0 0 0" Visibility="Collapsed"/>
+                    </StackPanel>
+
+                    <!--#endregion -->
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <!--#endregion -->
+
+        <!--#region for History Records DataTemplate-->
+
+        <DataTemplate x:Key="HistoryRecordsDataTemplate">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.ColumnSpan="2" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--#region Header-->
+
+                    <StackPanel Orientation="Vertical" Grid.ColumnSpan="2">
+                        <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource HashTag}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=OrderNumber}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource Date}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=DateTime}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+
+                            <!--<StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Path=Action, Converter={StaticResource ClipboardInputActionConverter}}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=Action}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                            </StackPanel>-->
+
+                            <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource Binary}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                <TextBlock Text="{Binding Path=Size, StringFormat={}{0} Kb}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator Background="{StaticResource BlueGrey500}" Height="1" VerticalAlignment="Bottom" Margin="0 5 0 0"/>
+                    </StackPanel>
+
+                    <!--#endregion -->
+
+                    <!--#region Body -->
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Margin="0 10 0 10">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding ContentImage, TargetNullValue={x:Null}}" 
+                                   Visibility="{Binding ContentImage, Converter={StaticResource Null2VisibilityConverter}, ConverterParameter=toggle-collapsed}"
+                                   Stretch="Uniform" Height="30"/>
+                            <!--<TextBlock Text="Tür: " FontWeight="SemiBold" Foreground="{StaticResource BlueGrey700}" VerticalAlignment="Center"/>-->
+                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey600}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="10 0 0 0">
+                            <TextBlock Text="{Binding Path=ContentTextPreview}" 
+                                       Width="600" 
+                                       TextTrimming="CharacterEllipsis" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="{StaticResource BlueGrey200}"
+                                       ToolTip="{Binding Path=ContentText}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 20 0">
+                        <Button Content="Sil" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}" Click="DeleteHistoryRecord"/>
+                        <Button Content="Kopyala" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}" Click="CopyHistoryRecord"/>
+                        <Button Content="Farklı Kaydet" Style="{StaticResource ClickableTextButton}" Foreground="{StaticResource BlueGrey600}" Tag="{Binding RowId}" Click="SaveAsHistoryRecord"/>
+
+                        <ToggleButton Style="{StaticResource StarToggleButton}" Margin="50 0 0 0"/>
+                    </StackPanel>
+
+                    <!--#endregion -->
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <!--#endregion -->
+
+        <!--#region Petterns DataTemplates-->
+
+        <DataTemplate x:Key="PetternGroups">
+            <StackPanel Orientation="Horizontal" Margin="15">
+                <StackPanel Orientation="Horizontal">
+                    <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource HashTag}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                    <TextBlock Text="{Binding Path=Order}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                    <TextBlock Text="{Binding Path=Title}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Petterns">
+            <StackPanel Orientation="Horizontal" Margin="15">
+                <StackPanel Orientation="Horizontal">
+                    <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource HashTag}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                    <TextBlock Text="{Binding Path=Order}" FontSize="12" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                    <TextBlock Text="{Binding Path=Title}" ToolTip="{Binding Path=Pettern}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5 0 0 0" Foreground="{StaticResource BlueGrey300}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <!--#endregion -->
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource ThemeColor1}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <!--Content-->
+        <TabControl x:Name="TabControl" Grid.Column="1" TabStripPlacement="Left" Style="{StaticResource PoliMakroTabControlDotDotBar}" SelectedIndex="0" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="Pano Monitörü" Style="{StaticResource PoliMakroTabItemDotDotBar}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="Records" Margin="0 10 0 10"
+                            Style="{StaticResource CustomListView}" 
+                            ItemContainerStyle="{StaticResource ClipboardRecordsListVıewItem}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            Tag="{Binding Path=Tag}" 
+                            ItemTemplate="{StaticResource RecordsDataTemplate}">
+                    </ListView>
+                    <Grid x:Name="SaveGrid" Visibility="Hidden">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="SaveRecordsClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border x:Name="SaveRecords" Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Yakalamaları Farklı İsimde Kaydet" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35">
+                                    <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                        <Grid Margin="0 0 10 0">
+                                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBox x:Name="SaveRecordsTitle"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Bu oturumdaki yakalamaları farklı bir isimle kaydedin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveAsNewTitleAndClean">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Kaydet ve Listeyi Temizle" Margin="10" Foreground="{StaticResource BlueGrey300}"/>
+                                        </Border>
+                                    </Button>
+
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveAsAndClose">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Sadece Kaydet" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid x:Name="MagnetGrid" Visibility="Hidden">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="SaveRecordsClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Yakalamaları Farklı Kaydet" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35">
+                                    <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                        <Grid Margin="0 0 10 0">
+                                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBox x:Name="t"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Bu oturumdaki yakalamaları farklı bir isimle kaydedin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveAsNewTitleAndClean">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Kaydet ve Listeyi Temizle" Margin="10" Foreground="{StaticResource BlueGrey300}"/>
+                                        </Border>
+                                    </Button>
+
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveAsAndClose">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Sadece Kaydet" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+
+                    <!--Seperator-->
+                    <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Column="2"
+                            Width="1" CornerRadius="1" Height="Auto" Margin="0 10 0 10"
+                            HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+                    <!--Side Actions-->
+                    <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center" Margin="15 0 5 0">
+                        <ToggleButton x:Name="Magnet" Style="{StaticResource CustomToggleButton}" Width="25" Height="25" Margin="0 15 5 15"
+                                        Visibility="Collapsed"
+                                        ToolTip="Gelecek Özellik">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Stretch="Uniform" Data="{Binding Source={StaticResource Magnet}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="SaveRecordsTB" Style="{StaticResource CustomToggleButton}" Width="25" Height="25" Margin="0 15 0 15"
+                                        Visibility="{Binding ElementName=Records, Path=HasItems, Converter={StaticResource Bool2ToggleVisibilityConverter}, FallbackValue=Visible}"
+                                        Checked="SaveRecordsChecked" Unchecked="SaveRecordsClose">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Width="22" Stretch="Uniform" Data="{Binding Source={StaticResource SaveAs}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ClearRecord" Style="{StaticResource CustomToggleButton}" Width="25" Height="25" Margin="0 15 5 15"
+                                        Visibility="{Binding ElementName=Records, Path=HasItems, Converter={StaticResource Bool2ToggleVisibilityConverter}, FallbackValue=Visible}"
+                                        Click="ClearRecords">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Stretch="Uniform" Data="{Binding Source={StaticResource Cleaning}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Pano Geçmişi" Style="{StaticResource PoliMakroTabItemDotDotBar}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="HistoryComboBox" 
+                                Width="Auto" Height="35" Margin="10 5 10 5"
+                                ItemTemplate="{StaticResource DataTemplateforAddLangCombo}"
+                                Background="{DynamicResource ThemeColor2}"
+                                Style="{DynamicResource CustomComboBoxStyle}" SelectionChanged="HistoryComboBox_SelectionChanged">
+                        <!--<ie:Interaction.Triggers>
+                            <ie:EventTrigger EventName="SelectionChanged">
+                                <ie:InvokeCommandAction Command="{Binding Select}"/>
+                            </ie:EventTrigger>
+                        </ie:Interaction.Triggers>-->
+                    </ComboBox>
+                    <ListView x:Name="HistoryRecords" Margin="10" Grid.Row="1"
+                            Style="{StaticResource CustomListView}" 
+                            ItemContainerStyle="{StaticResource ClipboardRecordsListVıewItem}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            Tag="{Binding Path=Tag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            ItemTemplate="{StaticResource HistoryRecordsDataTemplate}">
+                    </ListView>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Pano Mıknatısı" Style="{StaticResource PoliMakroTabItemDotDotBar}" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid x:Name="PetternsListGrid" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ListView x:Name="PetternGroups" Margin="10" SelectedIndex="0"
+                                    Style="{StaticResource CustomListView}" 
+                                    ItemContainerStyle="{StaticResource ClipboardRecordsListVıewItem}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                    Tag="Listelenecek bir desen grubu yok" 
+                                    ItemTemplate="{StaticResource PetternGroups}" SelectionChanged="PetternGroups_SelectionChanged">
+                        </ListView>
+
+                        <!--Seperator-->
+                        <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Column="1" Grid.Row="1"
+                                Width="1" CornerRadius="1" Height="Auto" Margin="0 10 0 10"
+                                HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+                        <ListView x:Name="Petterns" Margin="10" Grid.Column="1"
+                                    Style="{StaticResource CustomListView}" 
+                                    ItemContainerStyle="{StaticResource ClipboardRecordsListVıewItem}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                    Tag="Henüz listelenecek bir desen yok" 
+                                    ItemTemplate="{StaticResource Petterns}">
+                        </ListView>
+                    </Grid>
+                    <Grid x:Name="AddPetternGrid" Visibility="Hidden" Grid.Row="1">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="SavePetternClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border x:Name="AddPetternn" Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Yakalamaları Bir Desenle Süz" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal" Margin="10 5 5 5">
+                                        <Grid Margin="0 0 10 0">
+                                            <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource GroupofAtoms}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <ComboBox x:Name="PetternGroupsComboBox" Width="260" Height="35"
+                                                SelectedIndex="0"
+                                                ItemTemplate="{StaticResource DataTemplateforAddLangCombo}"
+                                                ItemsSource="{Binding Path=CodeLangs}" 
+                                                Background="{DynamicResource ThemeColor2}"
+                                                Style="{DynamicResource CustomComboBoxStyle}" SelectionChanged="HistoryComboBox_SelectionChanged">
+                                            <!--<ie:Interaction.Triggers>
+                                            <ie:EventTrigger EventName="SelectionChanged">
+                                                <ie:InvokeCommandAction Command="{Binding Select}"/>
+                                            </ie:EventTrigger>
+                                        </ie:Interaction.Triggers>-->
+                                        </ComboBox>
+                                        <ToggleButton Style="{StaticResource CustomToggleButton}" Width="25" Height="25" Margin="10 0 0 0"
+                                                        Click="AddNewPetternGroup">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Height="20" Stretch="Uniform" Data="{Binding Source={StaticResource Plus}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                                            </StackPanel>
+                                        </ToggleButton>
+                                    </StackPanel>
+
+                                    <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35" Margin="5">
+                                        <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                            <Grid Margin="0 0 10 0">
+                                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                            <TextBox x:Name="AddPetternTitle"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Desen karmaşık olabilir, daha özel bir isim verebilirsiniz"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35" Margin="5">
+                                        <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                            <Grid Margin="0 0 10 0">
+                                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                            <TextBox x:Name="AddPettern"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Bir regex deseni girin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SavePettern">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Kaydet" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid x:Name="AddPetternGroupGrid" Visibility="Hidden" Grid.Row="1">
+                        <Button Style="{StaticResource CustomButtonStyle}" Margin="10" HorizontalAlignment="Right" Click="SaveRecordsClose">
+                            <Grid>
+                                <Path Height="25" Width="25" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource Circle}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                                <Path Height="10" Width="10" Stretch="Fill" 
+                                          Data="{Binding Source={StaticResource CrossMark}, Path=Data}" 
+                                          Fill="{StaticResource BlueGrey400}"/>
+                            </Grid>
+                        </Button>
+                        <Border Background="{StaticResource ThemeColor1}" 
+                                Padding="20 20 25 15" BorderBrush="{StaticResource BlueGrey700}" 
+                                BorderThickness="1" CornerRadius="5" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Desenler Birbirne Karışmasın, Gruplayın" FontSize="18" 
+                                           Foreground="{StaticResource BlueGrey200}"
+                                           HorizontalAlignment="Center" Margin="0 0 0 25"/>
+                                <StackPanel Orientation="Vertical">
+                                    <Border CornerRadius="1" Background="{StaticResource ThemeColor1}" Height="35" Margin="5">
+                                        <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                            <Grid Margin="0 0 10 0">
+                                                <Path Stretch="Uniform" Height="15" Data="{Binding Source={StaticResource TextAlignLeft}, Path=Data}" Fill="{StaticResource BlueGrey400}" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                            <TextBox x:Name="AddPetternGroupTitle"
+                                                    Width="300" Height="35" MaxLength="225"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Tag="Desen grubu için bir isim girin"
+                                                    FontFamily="Segoe UI Semilight"
+                                                    Background="{StaticResource ThemeColor2}"
+                                                    Foreground="{StaticResource BlueGrey200}"
+                                                    CaretBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}"
+                                                    SelectionBrush="{Binding ElementName=AddGroupTitle, Path=Text, Converter={StaticResource SideMenuItemColorConverter}}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Command="{Binding Path=AddGroupComm}" Key="Enter" CommandParameter="{Binding ElementName=AddGroupTitle, Path=Text}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20 0 0 0">
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveGroup">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="Kaydet" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                    <Button Style="{StaticResource CustomButtonStyle}" Margin="10" Click="SaveGroupCancel">
+                                        <Border BorderBrush="{StaticResource BlueGrey700}" 
+                                                Width="125"
+                                                Background="{StaticResource ThemeColor2}" 
+                                                BorderThickness="1" CornerRadius="2">
+                                            <TextBlock Text="İptal" Margin="10" 
+                                                       Foreground="{StaticResource BlueGrey300}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--Seperator-->
+                    <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Column="2" Grid.Row="1"
+                            Width="1" CornerRadius="1" Height="Auto" Margin="0 10 0 10"
+                            HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+                    <!--Side Actions-->
+                    <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center" Grid.Row="1" Margin="15 0 5 0">
+                        <ToggleButton x:Name="SavePetternTB" Style="{StaticResource CustomToggleButton}" Width="25" Height="25" Margin="0 10 0 10"
+                                        Checked="SavePetternChecked" Unchecked="SavePetternClose">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="25" Stretch="Uniform" Data="{Binding Source={StaticResource Plus}, Path=Data}" Fill="{StaticResource BlueGrey300}"/>
+                            </StackPanel>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Ayarlar" Style="{StaticResource PoliMakroTabItemDotDotBar}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <WrapPanel Orientation="Horizontal">
+                            <GroupBox Header="Klavye - Fare Aksiyonları" Margin="0 20 0 0"
+                                  Foreground="{StaticResource BlueGrey200}" VerticalAlignment="Center" Width="250" BorderThickness="0">
+
+                                <StackPanel Margin="0 15 0 0">
+                                    <CheckBox Content="CTRL + X (Metin)" 
+                                          Foreground="{StaticResource BlueGrey200}"
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=KeyX, Mode=TwoWay}" 
+                                          Tag="Bu aksiyon sadece metin için tanımlıdır."
+                                          Command="{Binding Path=SetKey}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Keyx"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox Content="CTRL + C (Metin)" 
+                                          Foreground="{StaticResource BlueGrey200}"
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=KeyC, Mode=TwoWay}" 
+                                          Tag="Buda"
+                                          Command="{Binding Path=SetKey}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Keyc"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox Content="CTRL + V (Metin)" 
+                                          Foreground="{StaticResource BlueGrey200}"
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=KeyV, Mode=TwoWay}" 
+                                          Tag="Ve buda."
+                                          Command="{Binding Path=SetKey}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Keyv"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+
+                                    <Separator Height="1" HorizontalAlignment="Left" Background="{StaticResource BlueGrey300}" Opacity=".5" Width="130"/>
+                                    <CheckBox Content="CTRL + LShift (Metin Birleştirme)" 
+                                          Foreground="{StaticResource BlueGrey200}"
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=KeyLShift, Mode=TwoWay}" 
+                                          Tag="Ve buda."
+                                          Command="{Binding Path=SetKey}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Keylshift"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <Separator Height="1" HorizontalAlignment="Left" Background="{StaticResource BlueGrey300}" Opacity=".5" Width="130"/>
+
+                                    <CheckBox Content="Fare R - L Tık (Metin)" 
+                                          Foreground="{StaticResource BlueGrey200}" 
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=MouseRLText, Mode=TwoWay}" 
+                                          Tag="Fare ile Metinsel içeriği izler."
+                                          Command="{Binding Path=SetButton}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Mouseltext"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox Content="Fare R - L Tık (Görsel)" 
+                                          Foreground="{StaticResource BlueGrey200}" 
+                                          Style="{DynamicResource CustomCheckBox}" 
+                                          VerticalAlignment="Center" Margin="4" 
+                                          IsChecked="{Binding Path=MouseRLImage, Mode=TwoWay}" 
+                                          Tag="Fare ile Görsel içeriği izler."
+                                          Command="{Binding Path=SetButton}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                                                <Binding Path="Mouselimage"/>
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}"/>
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                </StackPanel>
+                            </GroupBox>
+
+
+                        </WrapPanel>
+                        <!--<TextBox Height="30" 
+                             Grid.Column="0" Grid.ColumnSpan="2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Tag="Bu bir ıurohoth reoth oeh varsayılan metindir">
+                        <TextBox.ToolTip>
+                            <ToolTip Style="{StaticResource WatermarkIncTextBoxTooltip}"/>
+                        </TextBox.ToolTip>
+                    </TextBox>-->
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!--Seperator-->
+        <Border Background="{StaticResource BlueGrey800}" Opacity=".7" Grid.Row="1" Grid.Column="1"
+                Width="Auto" CornerRadius="1" Height="1" Margin="10 0 10 0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+
+        <!--Bottom Tab Actions-->
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource CustomButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Path Height="15" Width="35" Stretch="Uniform" 
+                      Data="{Binding ElementName=TabControl, Converter={StaticResource TabControlNavigatorConverter}}" 
+                      Fill="{StaticResource BlueGrey200}"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

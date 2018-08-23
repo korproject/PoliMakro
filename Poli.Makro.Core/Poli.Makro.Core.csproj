@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{488F1A15-086B-4E4D-846A-F093784D6030}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Poli.Makro.Core</RootNamespace>
+    <AssemblyName>Poli.Makro.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BCrypt.Net, Version=0.1.5073.29922, Culture=neutral, PublicKeyToken=6bcd409ee6bc9292, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt-Official.0.1.109\lib\BCrypt.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ColorThief.Desktop.v46, Version=1.1.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ksemenenko.ColorThief.1.1.0.3\lib\net46\ColorThief.Desktop.v46.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.2.0.3\lib\net45\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.4.1.0, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\..\External Solutions\Avalon Tests\Git Version\AvalonEdit-master\ICSharpCode.AvalonEdit\bin\Debug\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="KOR.ColorConversions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\KOR.LIBS\KOR.ColorConversions\KOR.ColorConversions\bin\Debug\KOR.ColorConversions.dll</HintPath>
+    </Reference>
+    <Reference Include="KOR.ErrorReporter">
+      <HintPath>..\..\KOR.LIBS\KOR.ErrorReporter\KOR.ErrorReporter\bin\Debug\KOR.ErrorReporter.dll</HintPath>
+    </Reference>
+    <Reference Include="KOR.Licenser">
+      <HintPath>..\..\KOR.LIBS\KOR.Licenser\KOR.Licenser\bin\Debug\KOR.Licenser.dll</HintPath>
+    </Reference>
+    <Reference Include="KOR.SystemInfo">
+      <HintPath>..\..\KOR.LIBS\KOR.SystemInfo\KOR.SystemInfo\bin\Debug\KOR.SystemInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="KOR.Updater, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\KOR.LIBS\KOR.Updater\KOR.Updater\bin\Debug\KOR.Updater.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged, Version=2.5.6.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.6\lib\net452\PropertyChanged.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.2.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.2.2\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.108.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.108.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.108.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClipboardManager\Clipboard\ClipboardDatabaseProcesses.cs" />
+    <Compile Include="ClipboardManager\Clipboard\ClipboardEnviroment.cs" />
+    <Compile Include="ClipboardManager\Controllers\FileFolderController.cs" />
+    <Compile Include="Config\Configs.cs" />
+    <Compile Include="Controllers\DatabaseController.cs" />
+    <Compile Include="Controllers\InternetController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Database\App.cs" />
+    <Compile Include="Database\CodeLib.cs" />
+    <Compile Include="Database\Connection.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Database\SQLiteEngine.cs" />
+    <Compile Include="Database\Updater.cs" />
+    <Compile Include="Database\User.cs" />
+    <Compile Include="Helpers\Avalon\AvalonEditBehaviour.cs" />
+    <Compile Include="Helpers\Converters\Conv.cs" />
+    <Compile Include="Helpers\ExtraMath\Permutation.cs" />
+    <Compile Include="Helpers\File\FileProcesses.cs" />
+    <Compile Include="Helpers\Image\BitmapImageExtensions.cs" />
+    <Compile Include="ClipboardManager\Helpers\ClipboardHelper.cs" />
+    <Compile Include="ClipboardManager\Hooks\KeyboardHook.cs" />
+    <Compile Include="ClipboardManager\Hooks\MouseHook.cs" />
+    <Compile Include="ClipboardManager\Monitor\NativeInterop.cs" />
+    <Compile Include="ClipboardManager\Monitor\WindowClipboardMonitor.cs" />
+    <Compile Include="Helpers\Json\Json.cs" />
+    <Compile Include="Helpers\RichTextBox\RichTextBoxHelper.cs" />
+    <Compile Include="Helpers\String\B64.cs" />
+    <Compile Include="Helpers\String\Common.cs" />
+    <Compile Include="Helpers\TextBox\FocusExtension.cs" />
+    <Compile Include="Helpers\Xml\Xml.cs" />
+    <Compile Include="KORAPI\External\ErrorReporter.cs" />
+    <Compile Include="KORAPI\Json\Color\ImportExport\ImportExport.cs" />
+    <Compile Include="KORAPI\Json\Login\Common.cs" />
+    <Compile Include="KORAPI\Json\Login\Login.cs" />
+    <Compile Include="KORAPI\Json\Login\Token.cs" />
+    <Compile Include="KORAPI\Json\Login\Username.cs" />
+    <Compile Include="KORAPI\BasicRequests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Security\AES256.cs" />
+    <Compile Include="Strings\Strings.cs" />
+    <Compile Include="Test\Testa.cs" />
+    <Compile Include="Test\Testa.xaml.cs">
+      <DependentUpon>Testa.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\Base\BaseViewModel.cs" />
+    <Compile Include="ViewModel\Base\RelayCommand.cs" />
+    <Compile Include="ViewModel\Base\RelayParameterizedCommand.cs" />
+    <Compile Include="ViewModel\ClipboardManager\Clipboard.cs" />
+    <Compile Include="ViewModel\Code\Code.cs" />
+    <Compile Include="ViewModel\Color\ColorHub.cs" />
+    <Compile Include="ViewModel\JXR\JXR.cs" />
+    <Compile Include="ViewModel\LogRegRem\Login.cs" />
+    <Compile Include="ViewModel\MainWindow\MainWindow.cs" />
+    <Compile Include="ViewModel\Main\TrulyObservableCollection.cs" />
+    <Compile Include="ViewModel\Modals\Model\GetTitleViewModel.cs" />
+    <Compile Include="ViewModel\Modals\Model\IDialogViewModel.cs" />
+    <Compile Include="ViewModel\Modals\Model\IUserDialogViewModel.cs" />
+    <Compile Include="ViewModel\SchemaManager\JXXR Manager.cs" />
+    <Compile Include="ViewModel\Base\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\Modals\View\GetTitleDialog.xaml.cs">
+      <DependentUpon>GetTitleDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\Settings\Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Test\Testa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModel\Modals\View\GetTitleDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ColorManager\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.0.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.0.3\build\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />
+</Project>
